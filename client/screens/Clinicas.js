@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, SafeAreaView, Text, TouchableOpacity, Image, ScrollView } from 'react-native'; // Importa ScrollView
-import { SearchBar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import Calendario from '../components/Calendario';
+import UserInfoDropdown from '../components/User';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { Ionicons } from '@expo/vector-icons'; // Importa el icono de Ionicons
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Clinicas() {
   const [clinicas, setClinicas] = useState([]);
@@ -20,7 +20,7 @@ export default function Clinicas() {
     const data = await response.json();
     setClinicas(data);
   }
-
+  
   const handleDayPress = (day) => {
     console.log("Día seleccionado:", day);
   };
@@ -36,11 +36,14 @@ export default function Clinicas() {
 
   return (
       <ScrollView style={styles.main}>
-        <SearchBar
-        placeholder="Busca una clínica..."
-        style={styles.searchBar}
-        platform='android'
-      />
+        <View style={styles.header}>
+          {/*<SearchBar
+            placeholder="Busca una clínica..."
+            platform='android'
+            containerStyle={styles.searchBar}
+          />*/}
+          <UserInfoDropdown/>
+        </View>
           {clinicas.map((c, i) => (
             <View key={i} style={styles.clinica}>
               <Text style={styles.name}>{c.nombre}</Text>
@@ -99,10 +102,15 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginTop: 5,
   },
-  searchBar: {
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
     marginBottom: 5,
-    marginLeft: 10,
+  },
+  searchBar: {
+    flex: 1,
     marginRight: 10,
-    marginTop: 5,
-  }
+  },
 });
