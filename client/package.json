@@ -18,6 +18,8 @@
     "colors": "^1.4.0",
     "date-fns": "^3.6.0",
     "expo": "50",
+    "expo-file-system": "^17.0.1",
+    "expo-image-picker": "^15.0.4",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",

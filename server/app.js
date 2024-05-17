@@ -9,6 +9,8 @@ import {
     getTodasLasValoraciones,
 } from "./database.js";
 import cors from 'cors';
+import multer from 'multer';
+import path from 'path';
 
 const corsOptions = {
     origin: "http://139.47.13.144:5173",
@@ -93,6 +95,35 @@ app.post('/register', async (req, res) => {
         return res.status(500).json({ error: 'Error interno del servidor.'});
     }
 })
+
+// Configura multer para manejar la carga de archivos
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      // Establece la carpeta de destino donde se guardarán los archivos subidos
+      cb(null, path.join('/home/juanky/proyecto/app-psicologos/client/user_img'));
+    },
+    filename: (req, file, cb) => {
+      // Establece el nombre del archivo como el nombre de usuario seguido de la extensión original del archivo
+      console.log(file);
+      const fileName = `${file.originalname}`;
+      cb(null, fileName);
+    }
+  });
+  
+  // Crea el middleware de multer con la configuración de almacenamiento
+  const upload = multer({ storage });
+  
+  // Ruta para manejar la carga de imágenes
+  app.post('/upload', upload.single('image'), (req, res) => {
+    // Verifica si se subió correctamente un archivo de imagen
+    if (req.file) {
+      // Si se subió correctamente, devuelve una respuesta con el nombre del archivo
+      return res.status(200).json({ message: 'Imagen subida correctamente.', fileName: req.file.filename });
+    } else {
+      // Si no se subió ningún archivo o hubo un error, devuelve un mensaje de error
+      return res.status(400).json({ error: 'No se pudo subir la imagen.' });
+    }
+  });
 
 
 

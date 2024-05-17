@@ -51,6 +51,14 @@ export async function getTodosLosUsuarios() {
     return rows;
 }
 
+export async function updateFotoPerfil() {
+    const [result] = await pool.query(
+        `UPDATE usuarios SET foto_perfil_url = ? WHERE id = ?`,
+        [nuevaUrl, usuarioId]
+    );
+    return result.affectedRows;
+}
+
 export async function checkLogin(email, password) {
     const [rows] = await pool.query(
         `SELECT * FROM usuarios WHERE email = ? and password = ?`,
