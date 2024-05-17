@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
-const UserInfoDropdown = () => {
+const UserInfoDropdown = ({ currentUser }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(width)).current;
   const navigation = useNavigation();
@@ -54,9 +54,8 @@ const UserInfoDropdown = () => {
       >
         <View style={styles.modalBackground}>
           <Animated.View style={[styles.modalContent, { transform: [{ translateX: slideAnim }] }]}>
-            <Text>Nombre: Usuario</Text>
-            <Text>Correo electrónico: usuario@example.com</Text>
-            {/* Otros detalles del usuario */}
+            <Text>{currentUser.nombre}</Text>
+            <Text>{currentUser.email}</Text>
             <TouchableOpacity onPress={hideModal}>
               <Text style={{ color: 'blue', marginTop: 10 }}>Cerrar</Text>
             </TouchableOpacity>

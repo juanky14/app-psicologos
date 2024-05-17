@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Text, Image, TouchableOpacity, Alert} from 'react-native';
 import Register from './Register';
 import Clinicas from './Clinicas'
@@ -7,9 +7,25 @@ import logo from '../assets/logo.png';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Login({ onLogin }) {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigation = useNavigation();
+  const [user, setUser] = useState('');
+
+  async function getUser(email) {
+    try {
+      const response = await fetch(`http://192.168.1.136:8080/usuariosmail/${email}`);
+      const userData = await response.json();
+      setUser(userData);
+      
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Clinicas', params: { user: userData } }],
+      });
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
 
   const handleLogin = async () => {
     try {
@@ -25,11 +41,7 @@ export default function Login({ onLogin }) {
       });
       const data = await response.json();
       if (response.ok) {
-        // Si la respuesta es exitosa, llamar a la función onLogin para indicar que el usuario ha iniciado sesión.
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'Clinicas' }],
-        })
+        getUser(email);
       } else {
         // Si la respuesta indica que las credenciales son inválidas, mostrar un mensaje de error.
         Alert.alert('Error', data.error);
@@ -43,13 +55,8 @@ export default function Login({ onLogin }) {
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.logo} />
-
       <Text style={styles.titulo}>Psicolo<Text style={styles.bold}>Go</Text></Text>
-
       <View style={styles.form}>
-        {/*<Text style={styles.label}>Correo:</Text>
-        <Text style={styles.label}>Contraseña:</Text>*/}
-
         <TextInput
           style={styles.input}
           placeholder="Ingrese su correo"
@@ -94,11 +101,6 @@ const styles = StyleSheet.create({
   },
   form: {
     width: '80%',
-  },
-  label: {
-    marginLeft: 10,
-    marginBottom: 5,
-    fontSize: 16,
   },
   input: {
     borderWidth: 1,

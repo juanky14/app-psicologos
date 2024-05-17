@@ -19,9 +19,27 @@ export async function getUsuariosPorID(id) {
     return row[0];
 }
 
+export async function getUsuariosPorEmail(email) {
+    const [row] = await pool.query(
+        `SELECT * FROM usuarios WHERE email = ?`,
+        [email]
+    )
+    return row[0];
+}
+
 export async function getTodasLasClinicas() {
     const [rows] = await pool.query(
         `SELECT * FROM clinicas`
+    );
+    return rows;
+}
+
+export async function getTodasLasValoraciones() {
+    const [rows] = await pool.query(
+        `SELECT vc.id, vc.valoracion, vc.comentario, vc.clinica_id, vc.usuario_id, u.nombre AS nombre_usuario
+        FROM valoraciones_clinica vc
+        LEFT JOIN usuarios u ON vc.usuario_id = u.id;
+        `
     );
     return rows;
 }

@@ -2,9 +2,11 @@ import express from 'express';
 import {
     getTodasLasClinicas,
     getUsuariosPorID,
+    getUsuariosPorEmail,
     getTodosLosUsuarios,
     checkLogin,
     registerUser,
+    getTodasLasValoraciones,
 } from "./database.js";
 import cors from 'cors';
 
@@ -19,13 +21,23 @@ app.use (express.json()); //Refresca el servidor al hacer cualquier cambio
 app.use(cors(corsOptions));
 
 app.get("/usuarios/:id", async (req, res) => {
-    const usuarios = await getUsuariosByID(req.params.id);
+    const usuarios = await getUsuariosPorID(req.params.id);
     res.status(200).send(usuarios);
+})
+
+app.get("/usuariosmail/:email", async (req, res) => {
+    const usuario = await getUsuariosPorEmail(req.params.email);
+    res.status(200).send(usuario);
 })
 
 app.get("/clinicas", async (req, res) => {
     const clinicas = await getTodasLasClinicas();
     res.status(200).send(clinicas);
+})
+
+app.get("/valoraciones", async (req, res) => {
+    const valoraciones = await getTodasLasValoraciones();
+    res.status(200).send(valoraciones);
 })
 
 app.get("/usuarios", async (req, res) => {
