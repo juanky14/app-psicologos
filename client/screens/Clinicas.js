@@ -42,17 +42,8 @@ export default function Clinicas({ route }) {
     setUsuarios(data);
   }
 
-  const handleDayPress = (day) => {
-    console.log("Día seleccionado:", day);
-  };
-
-  const handleHourPress = (hour) => {
-    console.log("Hora seleccionada:", hour);
-  };
-
   const toggleCalendar = (index) => {
     setSelectedClinicIndex(index === selectedClinicIndex ? null : index);
-    console.log(clinicas[index].id);
   };
 
   const handlePrevReview = (clinicId) => {
@@ -99,7 +90,7 @@ export default function Clinicas({ route }) {
               <Text style={styles.buttonText}>RESERVA TU CITA</Text>
             </TouchableOpacity>
             {selectedClinicIndex === i && (
-              <Calendario handleDayPress={handleDayPress} handleHourPress={handleHourPress} />
+              <Calendario clinica={selectedClinicIndex+1} currentUserId={user.id} toggleCalendar={toggleCalendar}/>
             )}
           </View>
         );

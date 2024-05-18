@@ -7,6 +7,8 @@ import {
     checkLogin,
     registerUser,
     getTodasLasValoraciones,
+    getCitasPorDia,
+    insertarCita,
 } from "./database.js";
 import cors from 'cors';
 import multer from 'multer';
@@ -30,6 +32,11 @@ app.get("/usuarios/:id", async (req, res) => {
 app.get("/usuariosmail/:email", async (req, res) => {
     const usuario = await getUsuariosPorEmail(req.params.email);
     res.status(200).send(usuario);
+})
+
+app.get("/citas/:clinicaId/:dia", async (req, res) => {
+    const citas = await getCitasPorDia(req.params.clinicaId, req.params.dia);
+    res.status(200).send(citas);
 })
 
 app.get("/clinicas", async (req, res) => {
@@ -71,6 +78,31 @@ app.post('/login', async (req, res) => {
         return res.status(500).json({ error: 'Error interno del servidor.' });
     }
 })
+
+app.post('/insertar-cita', async (req, res) => {
+    const { clinicaId, usuarioId, fechaHora } = req.body;
+
+    // Verificar si se proporcionaron todos los datos necesarios para la cita
+    if (!clinicaId || !usuarioId || !fechaHora) {
+        return res.status(400).json({ error: 'Se requieren todos los campos para insertar una cita.' });
+    }
+
+    try {
+        // Llamar a la función insertarCita para insertar la cita en la base de datos
+        const citaId = await insertarCita(clinicaId, usuarioId, fechaHora);
+
+        // Verificar si se pudo insertar la cita correctamente
+        if (citaId) {
+            // Si la cita se insertó correctamente, devolver un mensaje de éxito
+            return res.status(200).json({ message: 'Cita confirmada', citaId });
+        } else {
+            // Si hubo un problema al insertar la cita, devolver un error
+            return res.status(500).json({ error: 'No se pudo insertar la cita.' });
+        }
+    } catch (error) {
+        return res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+});
 
 app.post('/register', async (req, res) => {
     const {email, nombre, dni, fecha_nacimiento, password1, password2} = req.body;

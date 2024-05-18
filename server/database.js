@@ -27,6 +27,29 @@ export async function getUsuariosPorEmail(email) {
     return row[0];
 }
 
+export async function getCitasPorDia(clinicaId, fecha) {
+    const [rows] = await pool.query(
+        `SELECT * FROM citas WHERE clinica_id = ? AND DATE(fecha_hora) = ?`,
+        [clinicaId, fecha]
+    );
+    return rows.map(row => {
+        const fecha = new Date(row.fecha_hora).toLocaleString();
+        const [fechaPart, horaPart] = fecha.split(',');
+        const [horas, minutos] = horaPart.trim().split(':');
+        return {
+            hora: `${horas}:${minutos}`
+        };
+    });
+}
+
+export async function insertarCita(clinicaId, usuarioId, fechaHora) {
+    const result = await pool.query(
+        'INSERT INTO citas (clinica_id, usuario_id, fecha_hora) VALUES (?, ?, ?)',
+        [clinicaId, usuarioId, fechaHora]
+    );
+    return result;
+}  
+
 export async function getTodasLasClinicas() {
     const [rows] = await pool.query(
         `SELECT * FROM clinicas`
