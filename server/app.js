@@ -15,7 +15,6 @@ import multer from 'multer';
 import path from 'path';
 
 const corsOptions = {
-    origin: "http://139.47.13.144:5173",
     methods: ["POST", "GET"],
     credentials: true,
 };

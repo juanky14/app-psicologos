@@ -59,7 +59,7 @@ const Calendario = ({ clinica, currentUserId, toggleCalendar }) => {
 
     async function getCitas(clinica, dia) {
         try {
-            const response = await fetch(`http://192.168.1.136:8080/citas/${clinica}/${dia}`);
+            const response = await fetch(`http://200.234.236.242:8080/citas/${clinica}/${dia}`);
             const citasdia = await response.json();
             setCitasNoDisponibles(citasdia);
         } catch (error) {
@@ -69,7 +69,7 @@ const Calendario = ({ clinica, currentUserId, toggleCalendar }) => {
 
     const insertarCita = async (clinicaId, usuarioId, fechaHora) => {
       try {
-          const response = await fetch('http://192.168.1.136:8080/insertar-cita', {
+          const response = await fetch('http://200.234.236.242:8080/insertar-cita', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json'

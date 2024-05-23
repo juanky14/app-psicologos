@@ -3578,6 +3578,13 @@ expo-modules-core@1.11.13:
   dependencies:
     invariant "^2.2.4"
 
+expo-modules-core@^1.12.11:
+  version "1.12.11"
+  resolved "https://registry.yarnpkg.com/expo-modules-core/-/expo-modules-core-1.12.11.tgz#71d7efb2f6a2a4d3b96defad52fc799b9804f829"
+  integrity sha512-CF5G6hZo/6uIUz6tj4dNRlvE5L4lakYukXPqz5ZHQ+6fLk1NQVZbRdpHjMkxO/QSBQcKUzG/ngeytpoJus7poQ==
+  dependencies:
+    invariant "^2.2.4"
+
 expo-status-bar@~1.11.1:
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/expo-status-bar/-/expo-status-bar-1.11.1.tgz#a11318741d361048c11db2b16c4364a79a74af30"

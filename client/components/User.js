@@ -67,7 +67,7 @@ const UserInfoDropdown = ({ currentUser }) => {
       });
 
       try {
-        const response = await fetch('http://192.168.1.136:8080/upload', {
+        const response = await fetch('http://200.234.236.242:8080/upload', {
           method: 'POST',
           body: formData,
         });

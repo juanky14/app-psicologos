@@ -25,19 +25,19 @@ export default function Clinicas({ route }) {
   }, []);
 
   async function getClinicas() {
-    const response = await fetch("http://192.168.1.136:8080/clinicas");
+    const response = await fetch("http://200.234.236.242:8080/clinicas");
     const data = await response.json();
     setClinicas(data);
   }
 
   async function getValoraciones() {
-    const response = await fetch("http://192.168.1.136:8080/valoraciones");
+    const response = await fetch("http://200.234.236.242:8080/valoraciones");
     const data = await response.json();
     setValoraciones(data);
   }
 
   async function getUsuarios() {
-    const response = await fetch("http://192.168.1.136:8080/usuarios");
+    const response = await fetch("http://1200.234.236.242:8080/usuarios");
     const data = await response.json();
     setUsuarios(data);
   }
