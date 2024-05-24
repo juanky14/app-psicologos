@@ -48,6 +48,14 @@ export async function getCitasPorDia(clinicaId, fecha) {
   });
 }
 
+export async function getCitasPorUsuario(usuarioId) {
+    const [rows] = await pool.query(
+      `SELECT * FROM citas WHERE usuario_id = ? AND fecha_hora > NOW()`,
+      [usuarioId]
+    );
+  
+    return rows;
+}  
 
 export async function insertarCita(clinicaId, usuarioId, fechaHora) {
     const result = await pool.query(

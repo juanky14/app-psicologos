@@ -9,6 +9,7 @@ import {
     getTodasLasValoraciones,
     getCitasPorDia,
     insertarCita,
+    getCitasPorUsuario,
 } from "./database.js";
 import cors from 'cors';
 import multer from 'multer';
@@ -35,6 +36,11 @@ app.get("/usuariosmail/:email", async (req, res) => {
 
 app.get("/citas/:clinicaId/:dia", async (req, res) => {
     const citas = await getCitasPorDia(req.params.clinicaId, req.params.dia);
+    res.status(200).send(citas);
+})
+
+app.get("/citas/:usuarioId", async (req, res) => {
+    const citas = await getCitasPorUsuario(req.params.usuarioId);
     res.status(200).send(citas);
 })
 
