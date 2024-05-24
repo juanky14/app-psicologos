@@ -6,7 +6,7 @@ const pool = mysql
 .createPool ({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
+    password: process.env.MYSQL_PWD,
     database: process.env.MYSQL_DATABASE,
 })
 .promise();
@@ -28,19 +28,26 @@ export async function getUsuariosPorEmail(email) {
 }
 
 export async function getCitasPorDia(clinicaId, fecha) {
-    const [rows] = await pool.query(
-        `SELECT * FROM citas WHERE clinica_id = ? AND DATE(fecha_hora) = ?`,
-        [clinicaId, fecha]
-    );
-    return rows.map(row => {
-        const fecha = new Date(row.fecha_hora).toLocaleString();
-        const [fechaPart, horaPart] = fecha.split(',');
-        const [horas, minutos] = horaPart.trim().split(':');
-        return {
-            hora: `${horas}:${minutos}`
-        };
-    });
+  const [rows] = await pool.query(
+    `SELECT * FROM citas WHERE clinica_id = ? AND DATE(fecha_hora) = ?`,
+    [clinicaId, fecha]
+  );
+
+  return rows.map(row => {
+    const fecha = new Date(row.fecha_hora);
+    let horas = fecha.getHours();
+    let minutos = fecha.getMinutes();
+
+    // Formatear horas y minutos para que no tengan cero inicial
+    horas = horas.toString();
+    minutos = minutos < 10 ? '0' + minutos : minutos.toString();
+
+    return {
+      hora: `${horas}:${minutos}`
+    };
+  });
 }
+
 
 export async function insertarCita(clinicaId, usuarioId, fechaHora) {
     const result = await pool.query(

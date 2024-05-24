@@ -158,6 +158,9 @@ const storage = multer.diskStorage({
 
 
 
-app.listen (8080, () => {
-    console.log("Servidor corriendo en el puerto 8080");
-})
+const IP = '200.234.236.242';
+const PORT = 8080;
+
+app.listen(PORT, IP, () => {
+    console.log(`Servidor corriendo en http://${IP}:${PORT}`);
+});
