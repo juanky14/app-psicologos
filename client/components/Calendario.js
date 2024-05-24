@@ -34,7 +34,10 @@ const Calendario = ({ clinica, currentUserId, toggleCalendar }) => {
     const generateHours = () => {
         const availableHours = [];
         for (let hour = 9; hour <= 13; hour++) {
+            console.log("hola");
             const formattedHour = `${hour}:00`;
+
+            console.log(formattedHour);
             availableHours.push({ hour: formattedHour, disabled: false });
         }
         for (let hour = 17; hour <= 19; hour++) {
@@ -62,6 +65,7 @@ const Calendario = ({ clinica, currentUserId, toggleCalendar }) => {
             const response = await fetch(`http://200.234.236.242:8080/citas/${clinica}/${dia}`);
             const citasdia = await response.json();
             setCitasNoDisponibles(citasdia);
+            console.log(citasdia);
         } catch (error) {
             console.error('Error fetching user data:', error);
         }
@@ -82,6 +86,7 @@ const Calendario = ({ clinica, currentUserId, toggleCalendar }) => {
           });
           const data = await response.json();
           if (response.ok) {
+              console.log(fechaHora);
               toggleCalendar();
               Alert.alert(data.message);
           } else {
