@@ -13,6 +13,8 @@ import {
     cancelarCitaPorId,
     getValoracionesPorUsuarioId,
     borrarValoracionPorId,
+    insertarValoracion,
+    getCitasPorClinica,
 } from "./database.js";
 import cors from 'cors';
 import multer from 'multer';
@@ -39,6 +41,16 @@ app.get("/usuariosmail/:email", async (req, res) => {
 
 app.get("/citas/:clinicaId/:dia", async (req, res) => {
     const citas = await getCitasPorDia(req.params.clinicaId, req.params.dia);
+    res.status(200).send(citas);
+})
+
+app.get("/citas/:usuarioId", async (req, res) => {
+    const citas = await getCitasPorUsuario(req.params.usuarioId);
+    res.status(200).send(citas);
+})
+
+app.get("/citasclinica/:usuarioId", async (req, res) => {
+    const citas = await getCitasPorClinica(req.params.usuarioId);
     res.status(200).send(citas);
 })
 
@@ -146,6 +158,22 @@ app.post('/insertar-cita', async (req, res) => {
         return res.status(500).json({ error: 'Error interno del servidor.' });
     }
 });
+
+app.post('/insertar-valoracion', async (req, res) => {
+    const { clinicaId, usuarioId, rating, comment } = req.body;
+  
+    if (!clinicaId || !usuarioId || rating == null || comment == null) {
+      return res.status(400).json({ message: 'Faltan datos necesarios.' });
+    }
+  
+    try {
+      const valoracionId = await insertarValoracion(clinicaId, usuarioId, rating, comment);
+      res.status(200).json({ message: 'Valoración insertada con éxito.', insertId: valoracionId.insertId });
+    } catch (error) {
+      console.error('Error al insertar la valoración:', error);
+      res.status(500).json({ message: 'Error al insertar la valoración.' });
+    }
+  });
 
 app.post('/register', async (req, res) => {
     const {email, nombre, dni, fecha_nacimiento, password1, password2} = req.body;

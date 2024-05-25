@@ -71,13 +71,35 @@ export async function getCitasPorUsuario(usuarioId) {
     return rows;
 }
 
+export async function getCitasPorClinica(usuarioId) {
+    const [rows] = await pool.query(
+      `SELECT c.*, u.nombre AS nombre_cliente
+      FROM citas c
+      JOIN clinicas cl ON c.clinica_id = cl.id
+      JOIN usuarios u ON c.usuario_id = u.id
+      WHERE cl.dueño_id = ?
+      AND c.fecha_hora > NOW()`,
+      [usuarioId]
+    );
+  
+    return rows;
+}
+
 export async function insertarCita(clinicaId, usuarioId, fechaHora) {
-    const result = await pool.query(
+    const [result] = await pool.query(
         'INSERT INTO citas (clinica_id, usuario_id, fecha_hora) VALUES (?, ?, ?)',
         [clinicaId, usuarioId, fechaHora]
     );
     return result;
 }  
+
+export async function insertarValoracion(clinicaId, usuarioId, rating, comment) {
+    const [result] = await pool.query(
+        'INSERT INTO valoraciones_clinica (clinica_id, valoracion, comentario, usuario_id) VALUES (?, ?, ?, ?)',
+        [clinicaId, rating, comment, usuarioId]
+    );
+    return result;
+} 
 
 export async function getTodasLasClinicas() {
     const [rows] = await pool.query(
