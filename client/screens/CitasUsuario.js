@@ -16,9 +16,18 @@ export default function CitasUsuario({ route }) {
   }, []);
 
   async function getCitasUsuario() {
-    const response = await fetch(`http://200.234.236.242:8080/citas/${user.id}`);
-    const data = await response.json();
-    setCitasUsuario(data);
+    try {
+      let response;
+      if (user.tipo === 'usuario_corriente') {
+        response = await fetch(`http://200.234.236.242:8080/citas/${user.id}`);
+      } else if (user.tipo === 'dueño_clinica') {
+        response = await fetch(`http://200.234.236.242:8080/citasclinica/${user.id}`);
+      }
+      const data = await response.json();
+      setCitasUsuario(data);
+    } catch (error) {
+      console.error('Error al obtener citas:', error);
+    }
   }
 
   const backToClinicas = () => {
@@ -44,12 +53,12 @@ export default function CitasUsuario({ route }) {
     }
   };
 
-  const formatFechaHora = (fechaHora, nombre_clinica) => {
+  const formatFechaHora = (fechaHora) => {
     const date = new Date(fechaHora);
     const options = { day: '2-digit', month: 'long' };
     const dateString = date.toLocaleDateString('es-ES', options);
     const timeString = date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-    return `Cita el ${dateString} a las ${timeString} horas en la clínica ${nombre_clinica}`;
+    return `el ${dateString} a las ${timeString} horas`;
   };
 
   return (
@@ -61,23 +70,28 @@ export default function CitasUsuario({ route }) {
       <Divider />
       {citasUsuario.map((cita) => {
         const formattedDate = formatFechaHora(cita.fecha_hora, cita.nombre_clinica);
+        const clinicaText = user.tipo === 'dueño_clinica' ? 'con' : 'en';
+        const clienteName = user.tipo === 'dueño_clinica' ? cita.nombre_cliente : cita.nombre_clinica;
         return (
           <View key={cita.id} style={styles.citaContainer}>
-            <Text style={styles.citaText}>{formattedDate}</Text>
-            <TouchableOpacity style={styles.button} onPress={() => cancelarCita(cita.id)}>
-              <Text style={styles.buttonText}>CANCELAR CITA</Text>
-            </TouchableOpacity>
+            <Text style={styles.citaText}>
+              Cita {formattedDate} {clinicaText} {clienteName}
+            </Text>
+            {user.tipo !== 'dueño_clinica' && (
+              <TouchableOpacity style={styles.button} onPress={() => cancelarCita(cita.id)}>
+                <Text style={styles.buttonText}>CANCELAR CITA</Text>
+              </TouchableOpacity>
+            )}
           </View>
         );
       })}
     </ScrollView>
-  );
+  );  
 }
 
 const styles = StyleSheet.create({
   main: {
     backgroundColor: 'white',
-    paddingTop: getStatusBarHeight(),
   },
   header: {
     flexDirection: 'row',

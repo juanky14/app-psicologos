@@ -36,7 +36,7 @@ const Valoraciones = ({ currentReviewIndex, clinicId, clinicReviews, handlePrevR
             {currentReview && renderStars(currentReview.valoracion)}
           </View>
           <Text style={styles.comment}>{currentReview && currentReview.comentario}</Text>
-          <Text style={styles.userName}> {currentReview && currentReview.nombre_usuario ? currentReview.nombre_usuario : "Anónimo"}</Text>
+          <Text style={styles.userName}> {currentReview && currentReview.nombre_usuario}</Text>
         </View>
         <TouchableOpacity
           onPress={() => handleNextReview(clinicId, clinicReviews.length)}

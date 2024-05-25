@@ -35,13 +35,13 @@ export default function ValoracionesUsuario({ route }) {
         method: 'DELETE',
       });
       if (response.ok) {
-        Alert.alert('Cita cancelada', 'La cita ha sido cancelada correctamente.');
-        getCitasUsuario();
+        Alert.alert('Reseña borrarda', 'Tu reseña ha sido borrada correctamente.');
+        getValoraciones();
       } else {
-        Alert.alert('Error', 'Hubo un problema al cancelar la cita.');
+        Alert.alert('Error', 'Hubo un problema al borrar la reseña.');
       }
     } catch (error) {
-      Alert.alert('Error', 'Hubo un problema al cancelar la cita.');
+      Alert.alert('Error', 'Hubo un problema al borrar la reseña.');
     }
   };
 
@@ -91,7 +91,6 @@ export default function ValoracionesUsuario({ route }) {
 const styles = StyleSheet.create({
   main: {
     backgroundColor: 'white',
-    paddingTop: getStatusBarHeight(),
   },
   header: {
     flexDirection: 'row',

@@ -3,9 +3,11 @@ import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from 'react-nati
 import { useNavigation } from '@react-navigation/native';
 import Calendario from '../components/Calendario';
 import UserInfoDropdown from '../components/User';
-import Valoraciones from '../components/Valoraciones'; // Importa el componente Valoraciones
+import Valoraciones from '../components/Valoraciones';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { Ionicons, MaterialIcons, AntDesign } from '@expo/vector-icons';
+import EscribirValoracion from '../components/EscribirValoracion';
+import BuscarClinica from '../components/BuscarClinica'; // Importa el componente BuscarClinica
 
 export default function Clinicas({ route }) {
   const { user } = route.params;
@@ -14,7 +16,9 @@ export default function Clinicas({ route }) {
   const [usuarios, setUsuarios] = useState([]);
   const [valoraciones, setValoraciones] = useState([]);
   const [selectedClinicIndex, setSelectedClinicIndex] = useState(null);
+  const [selectedClinicIndexValoracion, setSelectedClinicIndexValoracion] = useState(null);
   const [currentReviewIndex, setCurrentReviewIndex] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
 
   const navigation = useNavigation();
 
@@ -46,6 +50,10 @@ export default function Clinicas({ route }) {
     setSelectedClinicIndex(index === selectedClinicIndex ? null : index);
   };
 
+  const toggleValoracion = (index) => {
+    setSelectedClinicIndexValoracion(index === selectedClinicIndexValoracion ? null : index);
+  };
+
   const handlePrevReview = (clinicId) => {
     setCurrentReviewIndex((prevState) => {
       const newIndex = prevState[clinicId] > 0 ? prevState[clinicId] - 1 : 0;
@@ -60,41 +68,58 @@ export default function Clinicas({ route }) {
     });
   };
 
+  const handleSearch = (text) => {
+    setSearchTerm(text);
+    // Recargar la lista completa de clínicas cada vez que se modifica el término de búsqueda
+    getClinicas();
+  };
+
   return (
     <ScrollView style={styles.main}>
       <View style={styles.header}>
         <UserInfoDropdown 
           currentUser={user}
         />
+        <BuscarClinica onSearch={handleSearch} />
       </View>
-      {clinicas.map((c, i) => {
-        const clinicReviews = valoraciones.filter(v => v.clinica_id === c.id);
-        return (
-          <View key={i} style={styles.clinica}>
-            <Text style={styles.name}>{c.nombre}</Text>
-            <Text style={styles.details}>
-              <Ionicons name="phone-portrait" /> {c.telefono}
-            </Text>
-            <Text style={styles.details}>
-              <Ionicons name="map-sharp" /> {c.ubicacion}
-            </Text>
-            <Valoraciones
-              currentReviewIndex={currentReviewIndex}
-              clinicId={c.id}
-              clinicReviews={clinicReviews}
-              handlePrevReview={handlePrevReview}
-              handleNextReview={handleNextReview}
-              usuarios={usuarios}
-            />
-            <TouchableOpacity style={styles.button} onPress={() => toggleCalendar(i)}>
-              <Text style={styles.buttonText}>RESERVA TU CITA</Text>
-            </TouchableOpacity>
-            {selectedClinicIndex === i && (
-              <Calendario clinica={selectedClinicIndex+1} currentUserId={user.id} toggleCalendar={toggleCalendar}/>
-            )}
-          </View>
-        );
-      })}
+      {clinicas
+        .filter(clinica => clinica.nombre.toLowerCase().includes(searchTerm.toLowerCase()))
+        .map((c, i) => {
+          const clinicReviews = valoraciones.filter(v => v.clinica_id === c.id);
+          return (
+            <View key={i} style={styles.clinica}>
+              <Text style={styles.name}>{c.nombre}</Text>
+              <Text style={styles.details}>
+                <Ionicons name="phone-portrait" /> {c.telefono}
+              </Text>
+              <Text style={styles.details}>
+                <Ionicons name="map-sharp" /> {c.ubicacion}
+              </Text>
+              {clinicReviews.length > 0 && (
+                <Valoraciones
+                  currentReviewIndex={currentReviewIndex}
+                  clinicId={c.id}
+                  clinicReviews={clinicReviews}
+                  handlePrevReview={handlePrevReview}
+                  handleNextReview={handleNextReview}
+                  usuarios={usuarios}
+                />
+              )}
+              <TouchableOpacity style={styles.buttonValoracion} onPress={() => toggleValoracion(i)}>
+                <Text style={styles.buttonTextValoracion}>ESCRIBE UNA RESEÑA</Text>
+              </TouchableOpacity>
+              {selectedClinicIndexValoracion === i && (
+                <EscribirValoracion clinicaId={selectedClinicIndexValoracion+1} usuarioId={user.id} toggleValoracion={toggleValoracion} onSubmit={getValoraciones}/>
+              )}
+              <TouchableOpacity style={styles.button} onPress={() => toggleCalendar(i)}>
+                <Text style={styles.buttonText}>RESERVA TU CITA</Text>
+              </TouchableOpacity>
+              {selectedClinicIndex === i && (
+                <Calendario clinica={selectedClinicIndex+1} currentUserId={user.id} toggleCalendar={toggleCalendar}/>
+              )}
+            </View>
+          );
+        })}
     </ScrollView>
   );
 }
@@ -102,6 +127,7 @@ export default function Clinicas({ route }) {
 const styles = StyleSheet.create({
   main: {
     backgroundColor: 'white',
+    paddingTop: 20,
   },
   header: {
     flexDirection: 'row',
@@ -160,8 +186,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 5,
   },
+  buttonValoracion: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#fe8b06',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: '100%',
+    textAlign: 'center',
+    marginTop: 5,
+  },
   buttonText: {
     color: 'white',
+    fontSize: 16,
+  },
+  buttonTextValoracion: {
+    color: '#fe8b06',
     fontSize: 16,
   },
   arrow: {
@@ -172,4 +213,3 @@ const styles = StyleSheet.create({
     color: '#ddd',
   },
 });
-
