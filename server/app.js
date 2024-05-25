@@ -10,6 +10,8 @@ import {
     getCitasPorDia,
     insertarCita,
     getCitasPorUsuario,
+    cancelarCitaPorId,
+    getValoracionesPorUsuarioId,
 } from "./database.js";
 import cors from 'cors';
 import multer from 'multer';
@@ -49,10 +51,50 @@ app.get("/clinicas", async (req, res) => {
     res.status(200).send(clinicas);
 })
 
+app.delete('/citas/cancelar/:citaId', async (req, res) => {
+    const clinicas = await cancelarCitaPorId(req.params.citaId)
+    try {
+        if (clinicas.affectedRows === 0) {
+          return res.status(404).json({ message: 'Cita no encontrada' });
+        }
+        res.status(200).json({ message: 'Cita cancelada correctamente' });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Hubo un problema al cancelar la cita' });
+      }
+    res.status(200).json({ message: 'Cita cancelada correctamente' });
+});
+
+app.delete('/valoracion/borrar/:valoracionId', async (req, res) => {
+    const valoracion = await cancelarCitaPorId(req.params.valoracionId)
+    try {
+        if (valoracion.affectedRows === 0) {
+          return res.status(404).json({ message: 'Cita no encontrada' });
+        }
+        res.status(200).json({ message: 'Cita cancelada correctamente' });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Hubo un problema al cancelar la cita' });
+      }
+    res.status(200).json({ message: 'Cita cancelada correctamente' });
+});  
+
 app.get("/valoraciones", async (req, res) => {
     const valoraciones = await getTodasLasValoraciones();
     res.status(200).send(valoraciones);
 })
+
+app.get('/valoraciones/usuario/:usuarioId', async (req, res) => {
+    const usuarioId = req.params.usuarioId;
+
+    try {
+        const valoraciones = await getValoracionesPorUsuarioId(usuarioId);
+        res.status(200).send(valoraciones);
+    } catch (error) {
+        console.error('Error fetching valoraciones:', error);
+        res.status(500).send({ message: 'Error fetching valoraciones' });
+    }
+});
 
 app.get("/usuarios", async (req, res) => {
     const usuarios = await getTodosLosUsuarios();

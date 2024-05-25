@@ -50,12 +50,15 @@ export async function getCitasPorDia(clinicaId, fecha) {
 
 export async function getCitasPorUsuario(usuarioId) {
     const [rows] = await pool.query(
-      `SELECT * FROM citas WHERE usuario_id = ? AND fecha_hora > NOW()`,
+      `SELECT citas.*, clinicas.nombre AS nombre_clinica 
+       FROM citas 
+       JOIN clinicas ON citas.clinica_id = clinicas.id 
+       WHERE citas.usuario_id = ? AND citas.fecha_hora > NOW()`,
       [usuarioId]
     );
   
     return rows;
-}  
+}
 
 export async function insertarCita(clinicaId, usuarioId, fechaHora) {
     const result = await pool.query(
@@ -72,12 +75,41 @@ export async function getTodasLasClinicas() {
     return rows;
 }
 
+export async function cancelarCitaPorId(citaId) {
+    const [result] = await pool.query(
+        'DELETE FROM citas WHERE id = ?',
+        [citaId]
+    );
+
+    return result;
+}
+
+export async function borrarValoracionPorId(valoracionId) {
+    const [result] = await pool.query(
+        'DELETE FROM valoraciones WHERE id = ?',
+        [valoracionId]
+    );
+
+    return result;
+}
+
 export async function getTodasLasValoraciones() {
     const [rows] = await pool.query(
         `SELECT vc.id, vc.valoracion, vc.comentario, vc.clinica_id, vc.usuario_id, u.nombre AS nombre_usuario
         FROM valoraciones_clinica vc
         LEFT JOIN usuarios u ON vc.usuario_id = u.id;
         `
+    );
+    return rows;
+}
+
+export async function getValoracionesPorUsuarioId(usuarioId) {
+    const [rows] = await pool.query(
+        `SELECT vc.id, vc.valoracion, vc.comentario, vc.clinica_id, vc.usuario_id, c.nombre AS nombre_clinica
+        FROM valoraciones_clinica vc
+        LEFT JOIN clinicas c ON vc.clinica_id = c.id
+        WHERE vc.usuario_id = ?`,
+        [usuarioId]
     );
     return rows;
 }
