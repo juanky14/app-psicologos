@@ -38,7 +38,6 @@ export default function Perfil({ route }) {
 const styles = StyleSheet.create({
   main: {
     backgroundColor: 'white',
-    paddingTop: getStatusBarHeight(),
   },
   header: {
     flexDirection: 'row',

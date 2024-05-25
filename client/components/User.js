@@ -92,6 +92,16 @@ const UserInfoDropdown = ({ currentUser }) => {
     navigation.navigate('Perfil', { user: currentUser});
   };
 
+  const showCitas = () => {
+    hideModal();
+    navigation.navigate('CitasUsuario', { user: currentUser});
+  };
+
+  const showValoraciones = () => {
+    hideModal();
+    navigation.navigate('ValoracionesUsuario', { user: currentUser});
+  };
+
   return (
     <View>
       <Ionicons name="person" size={30} color="black" onPress={showModal} />
@@ -117,12 +127,12 @@ const UserInfoDropdown = ({ currentUser }) => {
                 <AntDesign name="right" color={"#fe8b06"} style={styles.arrow} />
               </TouchableOpacity>
               <Divider />
-              <TouchableOpacity onPress={hideModal} style={styles.textContainer}>
+              <TouchableOpacity onPress={showCitas} style={styles.textContainer}>
                 <Text style={styles.userDetails}>Mis citas </Text>
                 <AntDesign name="right" color={"#fe8b06"} style={styles.arrow} />
               </TouchableOpacity>
               <Divider />
-              <TouchableOpacity onPress={hideModal} style={styles.textContainer}>
+              <TouchableOpacity onPress={showValoraciones} style={styles.textContainer}>
                 <Text style={styles.userDetails}>Valoraciones </Text>
                 <AntDesign name="right" color={"#fe8b06"} style={styles.arrow} />
               </TouchableOpacity>

@@ -102,7 +102,6 @@ export default function Clinicas({ route }) {
 const styles = StyleSheet.create({
   main: {
     backgroundColor: 'white',
-    paddingTop: getStatusBarHeight(),
   },
   header: {
     flexDirection: 'row',

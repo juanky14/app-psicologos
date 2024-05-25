@@ -41,11 +41,6 @@ app.get("/citas/:clinicaId/:dia", async (req, res) => {
     res.status(200).send(citas);
 })
 
-app.get("/citas/:usuarioId", async (req, res) => {
-    const citas = await getCitasPorUsuario(req.params.usuarioId);
-    res.status(200).send(citas);
-})
-
 app.get("/clinicas", async (req, res) => {
     const clinicas = await getTodasLasClinicas();
     res.status(200).send(clinicas);
