@@ -97,7 +97,7 @@ export async function cancelarCitaPorId(citaId) {
 
 export async function borrarValoracionPorId(valoracionId) {
     const [result] = await pool.query(
-        'DELETE FROM valoraciones WHERE id = ?',
+        'DELETE FROM valoraciones_clinica WHERE id = ?',
         [valoracionId]
     );
 

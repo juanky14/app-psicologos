@@ -12,6 +12,7 @@ import {
     getCitasPorUsuario,
     cancelarCitaPorId,
     getValoracionesPorUsuarioId,
+    borrarValoracionPorId,
 } from "./database.js";
 import cors from 'cors';
 import multer from 'multer';
@@ -61,17 +62,17 @@ app.delete('/citas/cancelar/:citaId', async (req, res) => {
 });
 
 app.delete('/valoracion/borrar/:valoracionId', async (req, res) => {
-    const valoracion = await cancelarCitaPorId(req.params.valoracionId)
+    const valoracion = await borrarValoracionPorId(req.params.valoracionId)
     try {
         if (valoracion.affectedRows === 0) {
-          return res.status(404).json({ message: 'Cita no encontrada' });
+          return res.status(404).json({ message: 'Valoración no encontrada' });
         }
-        res.status(200).json({ message: 'Cita cancelada correctamente' });
+        res.status(200).json({ message: 'Valoración borrada correctamente' });
       } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Hubo un problema al cancelar la cita' });
+        res.status(500).json({ message: 'Hubo un problema al borrar la valoración' });
       }
-    res.status(200).json({ message: 'Cita cancelada correctamente' });
+    res.status(200).json({ message: 'Valoración borrada correctamente' });
 });  
 
 app.get("/valoraciones", async (req, res) => {
