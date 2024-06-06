@@ -53,18 +53,8 @@ export async function getCitasPorUsuario(usuarioId) {
       `SELECT citas.*, clinicas.nombre AS nombre_clinica 
        FROM citas 
        JOIN clinicas ON citas.clinica_id = clinicas.id 
-       WHERE citas.usuario_id = ? AND citas.fecha_hora > NOW()`,
-      [usuarioId]
-    );
-  
-    return rows;
-}  
-export async function getCitasPorUsuario(usuarioId) {
-    const [rows] = await pool.query(
-      `SELECT citas.*, clinicas.nombre AS nombre_clinica 
-       FROM citas 
-       JOIN clinicas ON citas.clinica_id = clinicas.id 
-       WHERE citas.usuario_id = ? AND citas.fecha_hora > NOW()`,
+       WHERE citas.usuario_id = ? AND citas.fecha_hora > NOW()
+       ORDER BY citas.fecha_hora`,
       [usuarioId]
     );
   
@@ -78,7 +68,8 @@ export async function getCitasPorClinica(usuarioId) {
       JOIN clinicas cl ON c.clinica_id = cl.id
       JOIN usuarios u ON c.usuario_id = u.id
       WHERE cl.dueño_id = ?
-      AND c.fecha_hora > NOW()`,
+      AND c.fecha_hora > NOW()
+      ORDER BY c.fecha_hora`,
       [usuarioId]
     );
   
@@ -144,6 +135,19 @@ export async function getValoracionesPorUsuarioId(usuarioId) {
         WHERE vc.usuario_id = ?`,
         [usuarioId]
     );
+    return rows;
+}
+
+export async function getValoracionesPorClinica(usuarioId) {
+    const [rows] = await pool.query(
+      `SELECT v.*, u.nombre AS nombre_cliente
+      FROM valoraciones_clinica v
+      JOIN clinicas cl ON v.clinica_id = cl.id
+      JOIN usuarios u ON v.usuario_id = u.id
+      WHERE cl.dueño_id = ?`,
+      [usuarioId]
+    );
+
     return rows;
 }
 

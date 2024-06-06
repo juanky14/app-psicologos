@@ -15,6 +15,7 @@ import {
     borrarValoracionPorId,
     insertarValoracion,
     getCitasPorClinica,
+    getValoracionesPorClinica,
 } from "./database.js";
 import cors from 'cors';
 import multer from 'multer';
@@ -51,6 +52,11 @@ app.get("/citas/:usuarioId", async (req, res) => {
 
 app.get("/citasclinica/:usuarioId", async (req, res) => {
     const citas = await getCitasPorClinica(req.params.usuarioId);
+    res.status(200).send(citas);
+})
+
+app.get("/valoracionesclinica/:usuarioId", async (req, res) => {
+    const citas = await getValoracionesPorClinica(req.params.usuarioId);
     res.status(200).send(citas);
 })
 
