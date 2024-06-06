@@ -95,6 +95,9 @@ export default function Clinicas({ route }) {
               <Text style={styles.details}>
                 <Ionicons name="map-sharp" /> {c.ubicacion}
               </Text>
+              <Text style={styles.details}>
+                {c.descripcion}
+              </Text>
               {clinicReviews.length > 0 && (
                 <Valoraciones
                   currentReviewIndex={currentReviewIndex}
@@ -127,7 +130,6 @@ export default function Clinicas({ route }) {
 const styles = StyleSheet.create({
   main: {
     backgroundColor: 'white',
-    paddingTop: 20,
   },
   header: {
     flexDirection: 'row',

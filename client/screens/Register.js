@@ -67,8 +67,6 @@ export default function Register({ onRegister }) {
 
   return (
     <View style={styles.container}>
-      <BackButton goBack={navigation.goBack} />
-
       <Text style={styles.titulo}>Regístrate<Text style={styles.bold}>Gratis</Text></Text>
       <Text style={styles.frase}>"Disfruta de la experiencia de PsicoloGo en unos pocos pasos"</Text>
 

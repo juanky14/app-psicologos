@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     marginLeft: 10,
-    width: '100%',
+    width: "89%",
   },
   icon: {
     marginRight: 5,

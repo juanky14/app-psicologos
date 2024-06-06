@@ -8,7 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 export default function ValoracionesUsuario({ route }) {
   const { user } = route.params;
-  const [valoracionesUsuario, setValoracionesUsuario] = useState([]);
+  const [valoraciones, setValoraciones] = useState([]);
 
   const navigation = useNavigation();
 
@@ -17,9 +17,15 @@ export default function ValoracionesUsuario({ route }) {
   }, []);
 
   async function getValoraciones() {
-    const response = await fetch(`http://200.234.236.242:8080/valoraciones/usuario/${user.id}`);
+    let url;
+    if (user.tipo === 'dueño_clinica') {
+      url = `http://200.234.236.242:8080/valoracionesclinica/${user.id}`;
+    } else {
+      url = `http://200.234.236.242:8080/valoraciones/usuario/${user.id}`;
+    }
+    const response = await fetch(url);
     const data = await response.json();
-    setValoracionesUsuario(data);
+    setValoraciones(data);
   }
 
   const backToClinicas = () => {
@@ -35,7 +41,7 @@ export default function ValoracionesUsuario({ route }) {
         method: 'DELETE',
       });
       if (response.ok) {
-        Alert.alert('Reseña borrarda', 'Tu reseña ha sido borrada correctamente.');
+        Alert.alert('Reseña borrada', 'Tu reseña ha sido borrada correctamente.');
         getValoraciones();
       } else {
         Alert.alert('Error', 'Hubo un problema al borrar la reseña.');
@@ -68,19 +74,20 @@ export default function ValoracionesUsuario({ route }) {
         <Text style={styles.headerText}>  VOLVER</Text>
       </TouchableOpacity>
       <Divider />
-      {valoracionesUsuario.map((currentReview) => {
+      {valoraciones.map((currentReview) => {
+        const userInfo = user.tipo === 'dueño_clinica' ? currentReview.nombre_cliente : currentReview.nombre_clinica;
         return (
-          <View key={currentReview.id} style={styles.citaContainer}>
-            <View style={styles.review}>
+          <View key={currentReview.id} style={styles.reviewContainer}>
               <View style={styles.stars}>
                 {currentReview && renderStars(currentReview.valoracion)}
               </View>
               <Text style={styles.comment}>{currentReview && currentReview.comentario}</Text>
-              <Text style={styles.userName}> {currentReview.nombre_clinica}</Text>
-            </View>
-            <TouchableOpacity style={styles.button} onPress={() => borrarValoracion(currentReview.id)}>
-              <Text style={styles.buttonText}>BORRAR RESEÑA</Text>
-            </TouchableOpacity>
+              <Text style={styles.userName}>{userInfo}</Text>
+            {user.tipo !== 'dueño_clinica' && (
+              <TouchableOpacity style={styles.button} onPress={() => borrarValoracion(currentReview.id)}>
+                <Text style={styles.buttonText}>BORRAR RESEÑA</Text>
+              </TouchableOpacity>
+            )}
           </View>
         );
       })}
@@ -102,7 +109,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
   },
-  citaContainer: {
+  reviewContainer: {
     borderRadius: 10,
     borderColor: '#fe8b06',
     borderWidth: 1,
@@ -112,7 +119,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginTop: 5,
   },
-  citaText: {
+  reviewText: {
     fontSize: 16,
   },
   divider: {
