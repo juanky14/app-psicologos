@@ -32,7 +32,7 @@ export default function Register({ onRegister }) {
 
   const registerUser = async () => {
     try {
-      const response = await fetch('http://192.168.1.136:8080/register', {
+      const response = await fetch('http://200.234.236.242:8080/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

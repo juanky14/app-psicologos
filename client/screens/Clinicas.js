@@ -41,7 +41,7 @@ export default function Clinicas({ route }) {
   }
 
   async function getUsuarios() {
-    const response = await fetch("http://1200.234.236.242:8080/usuarios");
+    const response = await fetch("http://200.234.236.242:8080/usuarios");
     const data = await response.json();
     setUsuarios(data);
   }
